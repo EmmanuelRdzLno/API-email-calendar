@@ -1,0 +1,102 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Correo y Calendario",
+    "version": "1.0.3"
+  },
+  "paths": {
+    "/api/email/send": {
+      "post": {
+        "summary": "Enviar un correo a uno o varios destinatarios",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "type": "array",
+                    "description": "Lista de correos a los que se enviará el mensaje",
+                    "items": { "type": "string", "example": "sguzmansalas217@gmail.com" },
+                    "example": [
+                      "sguzmansalas217@gmail.com",
+                      "assistent.ai.bot@gmail.com"
+                    ]
+                  },
+                  "subject": { "type": "string", "example": "Reunión" },
+                  "text": { "type": "string", "example": "Hola, recuerda la reunión mañana." },
+                  "html": { "type": "string", "example": "<p>Hola, recuerda la reunión mañana.</p>" },
+                  "attachments": {
+                    "type": "array",
+                    "description": "Archivos opcionales. Imágenes se convierten a PDF automáticamente.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "filename": { "type": "string", "example": "documento.pdf" },
+                        "content": { "type": "string", "example": "JVBERi0xLjQKJcfs..." },
+                        "encoding": { "type": "string", "example": "base64" }
+                      }
+                    },
+                    "example": [
+                      {
+                        "filename": "documento.pdf",
+                        "content": "JVBERi0xLjQKJcfs...",
+                        "encoding": "base64"
+                      }
+                    ]
+                  }
+                },
+                "required": ["to", "subject", "text"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Correo enviado" },
+          "500": { "description": "Error al enviar" }
+        }
+      }
+    },
+    "/api/calendar/create": {
+      "post": {
+        "summary": "Crear un evento en Google Calendar con asistentes",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "summary": { "type": "string", "example": "Reunión de equipo" },
+                  "description": { "type": "string", "example": "Revisar avances del proyecto" },
+                  "start": { "type": "string", "example": "2025-09-29T10:00:00-06:00" },
+                  "end": { "type": "string", "example": "2025-09-29T11:00:00-06:00" },
+                  "attendees": {
+                    "type": "array",
+                    "description": "Lista de asistentes al evento",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "email": { "type": "string", "example": "sguzmansalas217@gmail.com" }
+                      }
+                    },
+                    "example": [
+                      { "email": "sguzmansalas217@gmail.com" },
+                      { "email": "assistent.ai.bot@gmail.com" }
+                    ]
+                  }
+                },
+                "required": ["summary", "start", "end"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Evento creado" },
+          "500": { "description": "Error al crear el evento" }
+        }
+      }
+    }
+  }
+}
